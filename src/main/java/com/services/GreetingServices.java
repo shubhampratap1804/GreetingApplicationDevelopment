@@ -1,6 +1,8 @@
 package com.services;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.greeting.Greeting;
 import com.example.greeting.user.User;
@@ -11,6 +13,8 @@ public class GreetingServices implements IGreetingServices {
 
 	private static final String template = "Hello, %s";
 	private final AtomicLong counter = new AtomicLong();
+	
+	@Autowired
 	private GreetingRepository greetingRepository;
 
 	@Override
@@ -21,7 +25,13 @@ public class GreetingServices implements IGreetingServices {
 
 	@Override
 	public Greeting getGreetingById(long id) {
-
-		return null;
+		List<Greeting> allUsers = greetingRepository.findAll();
+		String message = "";
+		for(Greeting greeting : allUsers) {
+			if(greeting.getId() == id) {
+				message = greeting.getMessage();
+			}
+		}
+		return new Greeting(id,message);
 	}
 }
